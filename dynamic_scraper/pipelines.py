@@ -73,18 +73,21 @@ class ValidationPipeline(object):
             spider.log("TESTMODE: Item not saved.", log.INFO)
             raise DropItem()
         
+        import pdb;pdb.set_trace()
         url_elem = spider.scraper.get_detail_page_url_elem()
         url_name = url_elem.scraped_obj_attr.name
-        if url_name in item and item[url_name][0:6] == 'DOUBLE':
+
+        primary_keys = spider.scraper.scraperelem_set.filter(is_primary_key=True)
+        if len(primary_keys) > 0:
+            primary_key = primary_keys[0].scraped_obj_attr.name
+            kwargs = {primary_key: item[primary_key]}
+ 
+        if (kwargs != None) or (url_name in item and item[url_name][0:6] == 'DOUBLE'):
             item[url_name] = item[url_name][6:]
             standard_update_elems = spider.scraper.get_standard_update_elems()
             updated_attribute_list = ''
             if len(standard_update_elems) > 0:
-                primary_keys = spider.scraper.scraperelem_set.filter(is_primary_key=True)
-                if len(primary_keys) > 0:
-                    primary_key = primary_keys[0].scraped_obj_attr.name
-                    kwargs = {primary_key: item[primary_key]}
-            
+           
                 if kwargs != None:
                     exist_objects = spider.scraped_obj_class.objects.filter(**kwargs)
                 else:
@@ -106,6 +109,7 @@ class ValidationPipeline(object):
                                 if len(updated_attribute_list) > 0:
                                     updated_attribute_list += ', '
                                 updated_attribute_list += attr_name
+            import pdb;pdb.set_trace()
             if len(updated_attribute_list) > 0:
                 exist_object.save()
                 raise DropItem("Item already in DB, attributes updated: " + updated_attribute_list)
