@@ -95,6 +95,10 @@ class ValidationPipeline(object):
                     dummy_object = spider.scraped_obj_class()
                     for elem in standard_update_elems:
                         attr_name = elem.scraped_obj_attr.name
+
+                        if primary_key and (attr_name == 'url'):
+                            continue
+
                         if attr_name in item and hasattr(exist_object, attr_name):
                             setattr(dummy_object, attr_name, item[attr_name])
                             if unicode(getattr(dummy_object, attr_name)) != unicode(getattr(exist_object, attr_name)):
