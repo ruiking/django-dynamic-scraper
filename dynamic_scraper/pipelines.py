@@ -80,7 +80,16 @@ class ValidationPipeline(object):
             standard_update_elems = spider.scraper.get_standard_update_elems()
             updated_attribute_list = ''
             if len(standard_update_elems) > 0:
-                exist_objects = spider.scraped_obj_class.objects.filter(url=item[url_name])
+
+                primary_keys = spider.scraper.scraperelem_set.filter(is_primary_key=True)
+                if len(primary_keys) > 0:
+                    primary_key = primary_keys[0].scraped_obj_attr.name
+                    kwargs = {primary_key: item[primary_key]}
+            
+                if kwargs != None:
+                    exist_objects = spider.scraped_obj_class.objects.filter(**kwargs)
+                else:
+                    exist_objects = spider.scraped_obj_class.objects.filter(url=item[url_name])
                 if len(exist_objects) == 1:
                     exist_object = exist_objects[0]
                     dummy_object = spider.scraped_obj_class()
