@@ -33,7 +33,6 @@ class ScrapedObjAttr(models.Model):
         ('B', 'BASE'),
         ('U', 'DETAIL_PAGE_URL'),
         ('I', 'IMAGE'),
-        ('K', 'KEY'),
     )
     name = models.CharField(max_length=200)
     obj_class = models.ForeignKey(ScrapedObjClass)
@@ -112,9 +111,6 @@ class Scraper(models.Model):
     
     def get_image_elem(self):
         return self.scraperelem_set.get(scraped_obj_attr__attr_type='I')
-
-    def get_key_elem(self):
-        return self.scraperelem_set.get(scraped_obj_attr__attr_type='K')
     
     def get_scrape_elems(self):
         q1 = Q(scraped_obj_attr__attr_type='S')
