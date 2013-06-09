@@ -73,7 +73,6 @@ class ValidationPipeline(object):
             spider.log("TESTMODE: Item not saved.", log.INFO)
             raise DropItem()
         
-        import pdb;pdb.set_trace()
         url_elem = spider.scraper.get_detail_page_url_elem()
         url_name = url_elem.scraped_obj_attr.name
 
@@ -109,7 +108,6 @@ class ValidationPipeline(object):
                                 if len(updated_attribute_list) > 0:
                                     updated_attribute_list += ', '
                                 updated_attribute_list += attr_name
-            import pdb;pdb.set_trace()
             if len(updated_attribute_list) > 0:
                 exist_object.save()
                 raise DropItem("Item already in DB, attributes updated: " + updated_attribute_list)
