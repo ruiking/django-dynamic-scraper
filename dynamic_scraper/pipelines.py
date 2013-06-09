@@ -110,9 +110,9 @@ class ValidationPipeline(object):
                                 updated_attribute_list += attr_name
             if len(updated_attribute_list) > 0:
                 exist_object.save()
-                raise DropItem("Item already in DB, attributes updated: " + updated_attribute_list)
+                spider.log("Item already in DB, attributes updated: " + updated_attribute_list, log.INFO)
             else:
-                raise DropItem("Double item.")
+                spider.log("Double item.", log.INFO)
         
         spider.items_save_count += 1
 
